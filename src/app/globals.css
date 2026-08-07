@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+
+:root {
+  --background: #050505;
+  --foreground: #ffffff;
+  --cyan: #00f5ff;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+body {
+
+  background:
+  
+    #050505;
+
+  color: white;
+
+  font-family:
+    var(--font-inter),
+    sans-serif;
+
+  min-height:100vh;
+
+}
+
+
+h1,h2,h3 {
+
+ font-family:
+   var(--font-syne),
+   sans-serif;
+
+}
+
+
+::selection {
+
+ background:#00f5ff;
+ color:#000;
+
+}
+.hero-glow {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(34,211,238,0.25) 0%,
+      rgba(59,130,246,0.18) 35%,
+      rgba(124,58,237,0.28) 65%,
+      transparent 100%
+    );
+  border-radius: 9999px;
+  filter: blur(150px);
+}
