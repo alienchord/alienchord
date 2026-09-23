@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "music": "Musik",
+    "about": "Über",
+    "contact": "Kontakt"
+  },
+
+  "hero": {
+    "status": "ELEKTRONISCHER KÜNSTLER / PRODUZENT",
+    "button": "ANHÖREN"
+  },
+
+  "release": {
+    "title": "LETZTE VERÖFFENTLICHUNG",
+    "out": "JETZT DRAUSSEN"
+  },
+
+  "about": {
+    "title": "ÜBER DAS PROJEKT"
+  },
+
+  "contact": {
+    "title": "KONTAKT"
+  }
+}
