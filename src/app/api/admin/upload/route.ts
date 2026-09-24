@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
 import { requireRole } from "@/lib/admin-auth";
 import { Role } from "@/generated/prisma/enums";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import path from "path";
 
 export const runtime = "nodejs";
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 const MAX_AUDIO_SIZE = 200 * 1024 * 1024;
 
-const allowedImages = ["image/jpeg", "image/png", "image/webp"];
-const allowedAudio = ["audio/wav", "audio/x-wav", "audio/wave"];
+const allowedImages = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+
+const allowedAudio = [
+  "audio/wav",
+  "audio/x-wav",
+  "audio/wave",
+];
 
 export async function POST(request: Request) {
   const access = await requireRole([
@@ -49,14 +58,19 @@ export async function POST(request: Request) {
     if (type === "cover") {
       if (!allowedImages.includes(file.type)) {
         return NextResponse.json(
-          { error: "Cover must be JPG, PNG or WEBP." },
+          {
+            error: "Cover must be JPG, PNG or WEBP.",
+          },
           { status: 400 }
         );
       }
 
       if (file.size > MAX_IMAGE_SIZE) {
         return NextResponse.json(
-          { error: "Cover is too large. Maximum size is 10 MB." },
+          {
+            error:
+              "Cover is too large. Maximum size is 10 MB.",
+          },
           { status: 400 }
         );
       }
@@ -65,14 +79,19 @@ export async function POST(request: Request) {
     if (type === "audio") {
       if (!allowedAudio.includes(file.type)) {
         return NextResponse.json(
-          { error: "Audio must be a WAV file." },
+          {
+            error: "Audio must be a WAV file.",
+          },
           { status: 400 }
         );
       }
 
       if (file.size > MAX_AUDIO_SIZE) {
         return NextResponse.json(
-          { error: "Audio is too large. Maximum size is 200 MB." },
+          {
+            error:
+              "Audio is too large. Maximum size is 200 MB.",
+          },
           { status: 400 }
         );
       }
@@ -91,36 +110,40 @@ export async function POST(request: Request) {
 
     const folder =
       type === "cover"
-        ? path.join(
-            process.cwd(),
-            "public",
-            "uploads",
-            "covers"
-          )
-        : path.join(
-            process.cwd(),
-            "public",
-            "uploads",
-            "audio"
-          );
+        ? "covers"
+        : "audio";
 
-    await mkdir(folder, { recursive: true });
-
-    const filePath = path.join(folder, safeName);
+    const storagePath = `${folder}/${safeName}`;
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    await writeFile(filePath, buffer);
+    const { error } = await supabaseAdmin.storage
+      .from("media")
+      .upload(storagePath, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
 
-    const publicPath =
-      type === "cover"
-        ? `/uploads/covers/${safeName}`
-        : `/uploads/audio/${safeName}`;
+    if (error) {
+      console.error("Supabase upload error:", error);
+
+      return NextResponse.json(
+        {
+          error: "Upload failed.",
+          details: error.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    const { data } = supabaseAdmin.storage
+      .from("media")
+      .getPublicUrl(storagePath);
 
     return NextResponse.json({
       success: true,
-      path: publicPath,
+      path: data.publicUrl,
       filename: safeName,
       originalName,
     });

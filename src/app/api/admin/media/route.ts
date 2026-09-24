@@ -1,58 +1,51 @@
 import { NextResponse } from "next/server";
-import {
-  readdir,
-  stat,
-  unlink,
-} from "fs/promises";
-import path from "path";
 
 import { requireRole } from "@/lib/admin-auth";
 import { Role } from "@/generated/prisma/enums";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+
+export const runtime = "nodejs";
 
 async function getFiles(
   folder: string,
   type: "cover" | "audio"
 ) {
-  const directory = path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    folder
-  );
+  const { data, error } = await supabaseAdmin.storage
+    .from("media")
+    .list(folder, {
+      limit: 1000,
+      sortBy: {
+        column: "created_at",
+        order: "desc",
+      },
+    });
 
-  try {
-    const entries = await readdir(directory);
-
-    const files = [];
-
-    for (const filename of entries) {
-      const filePath = path.join(
-        directory,
-        filename
-      );
-
-      const fileStat = await stat(filePath);
-
-      if (!fileStat.isFile()) {
-        continue;
-      }
-
-      files.push({
-        filename,
-        type,
-        size: fileStat.size,
-        updatedAt: fileStat.mtime.toISOString(),
-        path:
-          type === "cover"
-            ? `/uploads/covers/${filename}`
-            : `/uploads/audio/${filename}`,
-      });
-    }
-
-    return files;
-  } catch {
-    return [];
+  if (error) {
+    throw error;
   }
+
+  return (data ?? [])
+    .filter((file) => file.name)
+    .map((file) => {
+      const path = `${folder}/${file.name}`;
+
+      const { data: publicUrl } = supabaseAdmin.storage
+        .from("media")
+        .getPublicUrl(path);
+
+      return {
+        filename: file.name,
+        type,
+        size: file.metadata?.size
+          ? Number(file.metadata.size)
+          : 0,
+        updatedAt:
+          file.updated_at ??
+          file.created_at ??
+          new Date().toISOString(),
+        path: publicUrl.publicUrl,
+      };
+    });
 }
 
 export async function GET() {
@@ -178,15 +171,28 @@ export async function DELETE(
         ? "covers"
         : "audio";
 
-    const filePath = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      folder,
-      filename
-    );
+    const storagePath = `${folder}/${filename}`;
 
-    await unlink(filePath);
+    const { error } = await supabaseAdmin.storage
+      .from("media")
+      .remove([storagePath]);
+
+    if (error) {
+      console.error(
+        "Supabase media delete error:",
+        error
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to delete media.",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
 
     return NextResponse.json({
       success: true,

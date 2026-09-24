@@ -48,7 +48,7 @@
           },
           "description": "Identity is not a static image. It is a signal in motion.",
           "code": "AC / ID-01",
-          "image": "/uploads/covers/photo-2023-06-07-16-40-59-1790173166106.jpg"
+          "image": "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/covers/photo-2023-06-07-16-40-59-1790173166106.jpg"
         },
         "two": {
           "category": "MOTION",
@@ -96,7 +96,7 @@
       "instagram": "INSTAGRAM"
     },
     "visualsPreview": {
-      "image": "/uploads/covers/photo-2023-06-07-16-40-59-1790173325893.jpg",
+      "image": "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/covers/photo-2023-06-07-16-40-59-1790173325893.jpg",
       "label": "Visuals",
       "counter": "01 / 03",
       "topLabel": "SOUND / MOTION / IDENTITY",

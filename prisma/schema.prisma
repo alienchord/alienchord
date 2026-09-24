@@ -81,3 +81,14 @@ model AnalyticsEvent {
   @@index([visitorId])
   @@index([timestamp])
 }
+model SiteContent {
+  id        String   @id @default("main")
+  content   Json
+  updatedAt DateTime @updatedAt
+}
+
+model ReleaseData {
+  id        String   @id
+  content   Json
+  updatedAt DateTime @updatedAt
+}

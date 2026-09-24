@@ -4,8 +4,8 @@
     "title": "My Remedy",
     "type": "single",
     "releaseDate": "January 2023",
-    "cover": "/My-Remedy.JPEG",
-    "audio": "/audio/My-Remedy.wav",
+    "cover": "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/covers/37720317eebdfb0d5deb8f0235414fb4-1790186649609.jpg",
+    "audio": "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/audio/alien-chord-my-remedy-1790186721959.wav",
     "description": {
       "en": "A heartfelt electronic release blending emotional atmosphere with modern energy.",
       "ru": "Эмоциональный электронный релиз, объединяющий атмосферу, энергию и современное звучание."
@@ -13,7 +13,7 @@
     "tracks": [
       {
         "title": "My Remedy",
-        "audio": "/audio/My-Remedy.wav"
+        "audio": "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/audio/alien-chord-my-remedy-1790186721959.wav"
       }
     ],
     "links": {

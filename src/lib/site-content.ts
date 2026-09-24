@@ -1,11 +1,22 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@/generated/prisma/client";
 import { translations } from "@/data/translations";
 
 export type SiteContent = typeof translations;
 
-const dataDirectory = path.join(process.cwd(), "data");
-const contentFile = path.join(dataDirectory, "site-content.json");
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const adapter = new PrismaPg({
+  connectionString,
+});
+
+const prisma = new PrismaClient({
+  adapter,
+});
 
 function deepMerge(
   defaults: any,
@@ -47,20 +58,23 @@ function deepMerge(
 
 export async function getSiteContent(): Promise<SiteContent> {
   try {
-    const file = await fs.readFile(
-      contentFile,
-      "utf8"
-    );
+    const row = await prisma.siteContent.findUnique({
+      where: {
+        id: "main",
+      },
+    });
 
-    const data = JSON.parse(file);
+    if (!row) {
+      return translations;
+    }
 
     return deepMerge(
       translations,
-      data
+      row.content
     ) as SiteContent;
   } catch (error) {
     console.error(
-      "Failed to read site content:",
+      "Failed to read site content from database:",
       error
     );
 
@@ -71,13 +85,25 @@ export async function getSiteContent(): Promise<SiteContent> {
 export async function saveSiteContent(
   content: SiteContent
 ): Promise<void> {
-  await fs.mkdir(dataDirectory, {
-    recursive: true,
-  });
+  try {
+    await prisma.siteContent.upsert({
+      where: {
+        id: "main",
+      },
+      update: {
+        content,
+      },
+      create: {
+        id: "main",
+        content,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Failed to save site content to database:",
+      error
+    );
 
-  await fs.writeFile(
-    contentFile,
-    JSON.stringify(content, null, 2),
-    "utf8"
-  );
+    throw error;
+  }
 }

@@ -10,9 +10,11 @@ export const releases: Release[] = [
 
     releaseDate: "January 2023",
 
-    cover: "/My-Remedy.JPEG",
+    cover:
+      "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/covers/37720317eebdfb0d5deb8f0235414fb4-1790186649609.jpg",
 
-    audio: "/audio/My-Remedy.wav",
+    audio:
+      "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/audio/alien-chord-my-remedy-1790186721959.wav",
 
     description: {
       en: "A heartfelt electronic release blending emotional atmosphere with modern energy.",
@@ -23,7 +25,8 @@ export const releases: Release[] = [
     tracks: [
       {
         title: "My Remedy",
-        audio: "/audio/My-Remedy.wav",
+        audio:
+          "https://uevvudtqmboijprbohfd.supabase.co/storage/v1/object/public/media/audio/alien-chord-my-remedy-1790186721959.wav",
       },
     ],
 
