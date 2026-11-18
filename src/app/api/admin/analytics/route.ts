@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/admin-auth";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 function getCountry(request: Request): string {
   const vercelCountry = request.headers.get(

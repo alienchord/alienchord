@@ -5,7 +5,7 @@ import {
   type AdminRelease,
 } from "@/lib/releases";
 import { requireRole } from "@/lib/admin-auth";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 export async function GET() {
   try {

@@ -4,7 +4,7 @@ import {
   saveSiteContent,
 } from "@/lib/site-content";
 import { requireRole } from "@/lib/admin-auth";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 

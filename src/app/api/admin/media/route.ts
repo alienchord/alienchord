@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireRole } from "@/lib/admin-auth";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";

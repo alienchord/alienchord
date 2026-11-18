@@ -3,7 +3,7 @@ import crypto from "crypto";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 function hashPassword(password: string, salt: string) {
   return crypto
