@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 import UsersClient from "./UsersClient";
 
