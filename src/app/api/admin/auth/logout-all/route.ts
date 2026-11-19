@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
 export async function POST() {
@@ -18,7 +18,7 @@ export async function POST() {
       );
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await getPrisma().user.findUnique({
       where: {
         email: session.user.email,
       },
@@ -44,7 +44,7 @@ export async function POST() {
       );
     }
 
-    await prisma.session.deleteMany({
+    await getPrisma().session.deleteMany({
       where: {
         userId: user.id,
       },

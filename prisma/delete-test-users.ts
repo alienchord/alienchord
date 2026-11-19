@@ -1,5 +1,7 @@
 import "dotenv/config";
-import { prisma } from "../src/lib/prisma";
+import { getPrisma } from "../src/lib/prisma";
+
+const prisma = getPrisma();
 
 const emails = [
   "alienchord.admin.test@gmail.com",

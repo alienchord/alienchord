@@ -2,7 +2,7 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 export default async function AdminLayout({
   children,
@@ -15,7 +15,7 @@ export default async function AdminLayout({
     redirect("/admin/login");
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await getPrisma().user.findUnique({
     where: {
       email: session.user.email,
     },
@@ -26,7 +26,7 @@ export default async function AdminLayout({
   }
 
   const activeSession =
-    await prisma.session.findFirst({
+    await getPrisma().session.findFirst({
       where: {
         userId: user.id,
         expires: {

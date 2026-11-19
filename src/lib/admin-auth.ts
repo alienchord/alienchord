@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
 export async function requireAdmin() {
@@ -14,7 +14,7 @@ export async function requireAdmin() {
     };
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await getPrisma().user.findUnique({
     where: {
       email: session.user.email,
     },
@@ -39,7 +39,7 @@ export async function requireAdmin() {
   }
 
   const activeSession =
-    await prisma.session.findFirst({
+    await getPrisma().session.findFirst({
       where: {
         userId: user.id,
         expires: {

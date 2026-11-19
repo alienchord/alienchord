@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
 export async function POST(request: Request) {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await getPrisma().user.findUnique({
       where: {
         email: session.user.email,
       },
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await getPrisma().user.findUnique({
       where: {
         email,
       },
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await prisma.user.create({
+    const user = await getPrisma().user.create({
       data: {
         name,
         email,

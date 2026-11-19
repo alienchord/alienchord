@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
 export async function PUT(
@@ -23,7 +23,7 @@ export async function PUT(
       );
     }
 
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await getPrisma().user.findUnique({
       where: {
         email: session.user.email,
       },
@@ -79,7 +79,7 @@ export async function PUT(
       );
     }
 
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await getPrisma().user.update({
       where: {
         id,
       },
@@ -137,7 +137,7 @@ export async function DELETE(
       );
     }
 
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await getPrisma().user.findUnique({
       where: {
         email: session.user.email,
       },
@@ -175,7 +175,7 @@ export async function DELETE(
       );
     }
 
-    await prisma.user.delete({
+    await getPrisma().user.delete({
       where: {
         id,
       },

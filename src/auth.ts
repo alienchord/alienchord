@@ -2,15 +2,15 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 export const {
   handlers,
   auth,
   signIn,
   signOut,
-} = NextAuth({
-  adapter: PrismaAdapter(prisma),
+} = NextAuth(() => ({
+  adapter: PrismaAdapter(getPrisma()),
 
   providers: [
     Google({
@@ -39,7 +39,7 @@ export const {
       }
 
       const existingUser =
-        await prisma.user.findUnique({
+        await getPrisma().user.findUnique({
           where: {
             email: user.email,
           },
@@ -58,7 +58,7 @@ export const {
       }
 
       const dbUser =
-        await prisma.user.findUnique({
+        await getPrisma().user.findUnique({
           where: {
             id: user.id,
           },
@@ -69,7 +69,7 @@ export const {
       }
 
       const verifiedSession =
-        await prisma.session.findFirst({
+        await getPrisma().session.findFirst({
           where: {
             userId: dbUser.id,
             expires: {
@@ -94,4 +94,4 @@ export const {
       };
     },
   },
-});
+}));

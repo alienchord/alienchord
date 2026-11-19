@@ -1,20 +1,5 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "@/lib/prisma";
 import { releases as staticReleases } from "@/data/releases";
-
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
-}
-
-const adapter = new PrismaPg({
-  connectionString,
-});
-
-const prisma = new PrismaClient({
-  adapter,
-});
 
 export type Track = {
   title: string;
@@ -62,7 +47,7 @@ function toAdminRelease(content: unknown): AdminRelease | null {
 
 export async function getAdminReleases(): Promise<AdminRelease[]> {
   try {
-    const rows = await prisma.releaseData.findMany({
+    const rows = await getPrisma().releaseData.findMany({
       orderBy: {
         updatedAt: "asc",
       },
@@ -122,7 +107,7 @@ export async function saveAdminReleases(
   releases: AdminRelease[]
 ): Promise<void> {
   try {
-    await prisma.$transaction(async (tx) => {
+    await getPrisma().$transaction(async (tx) => {
       await tx.releaseData.deleteMany();
 
       for (const release of releases) {

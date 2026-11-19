@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/admin-auth";
 import { Role } from "@prisma/client";
 
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     const country = getCountry(request);
 
-    await prisma.analyticsEvent.create({
+    await getPrisma().analyticsEvent.create({
       data: {
         visitorId,
         type: "pageview",
@@ -96,7 +96,7 @@ export async function GET() {
 
   try {
     const events =
-      await prisma.analyticsEvent.findMany({
+      await getPrisma().analyticsEvent.findMany({
         orderBy: {
           timestamp: "desc",
         },

@@ -1,22 +1,7 @@
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "@/lib/prisma";
 import { translations } from "@/data/translations";
 
 export type SiteContent = typeof translations;
-
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
-}
-
-const adapter = new PrismaPg({
-  connectionString,
-});
-
-const prisma = new PrismaClient({
-  adapter,
-});
 
 function deepMerge(
   defaults: any,
@@ -58,7 +43,7 @@ function deepMerge(
 
 export async function getSiteContent(): Promise<SiteContent> {
   try {
-    const row = await prisma.siteContent.findUnique({
+    const row = await getPrisma().siteContent.findUnique({
       where: {
         id: "main",
       },
@@ -86,7 +71,7 @@ export async function saveSiteContent(
   content: SiteContent
 ): Promise<void> {
   try {
-    await prisma.siteContent.upsert({
+    await getPrisma().siteContent.upsert({
       where: {
         id: "main",
       },

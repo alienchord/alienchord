@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
 import AnalyticsClient from "./AnalyticsClient";
@@ -13,7 +13,7 @@ export default async function AnalyticsPage() {
     redirect("/admin/login");
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await getPrisma().user.findUnique({
     where: {
       email: session.user.email,
     },

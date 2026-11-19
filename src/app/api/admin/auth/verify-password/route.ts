@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 function hashPassword(password: string, salt: string) {
   return crypto
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await getPrisma().user.findUnique({
       where: {
         email: session.user.email,
       },
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const sessions = await prisma.session.findMany({
+    const sessions = await getPrisma().session.findMany({
       where: {
         userId: user.id,
         expires: {
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
       );
     }
 
-    await prisma.session.update({
+    await getPrisma().session.update({
       where: {
         id: currentSession.id,
       },
